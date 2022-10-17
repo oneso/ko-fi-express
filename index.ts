@@ -11,6 +11,11 @@ export const kofi = (app: Express, config?: Partial<Config<Request>>) => {
         try {
             const parsed: RequestData = JSON.parse(data);
 
+            if (config.verificationToken && parsed.verification_token !== config.verificationToken) {
+                console.error('Ko-fi invalid verification token');
+                return res.sendStatus(401);
+            }
+
             await conf.onData?.(parsed, req);
 
             switch (parsed.type) {
@@ -29,7 +34,9 @@ export const kofi = (app: Express, config?: Partial<Config<Request>>) => {
             }
         } catch (err) {
             console.error('Ko-fi request error: ', err);
-            res.sendStatus(400);
+            config.onError?.(err, req);
+
+            return res.sendStatus(400);
         }
 
         res.sendStatus(200);
