@@ -14,8 +14,6 @@ For more informations visit https://ko-fi.com/manage/webhooks
 
 `yarn add @ko-fi/express`
 
----
-
 ## Example
 
 View example implementation [here](https://github.com/oneso/ko-fi-express-example);
