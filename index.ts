@@ -1,18 +1,9 @@
-import { Express, Request as ExpressRequest } from 'express';
+import { Express, Request } from 'express';
 
-import { CommissionData, DonationData, RequestData, ShopOrderData, SubscriptionData, Type } from '@ko-fi/types';
+import { Config, mergeConfig, RequestData, Type } from '@ko-fi/types';
 
-const defaultConfig: Config = {
-    endpoint: '/webhook',
-    onData: () => null,
-    onCommission: () => null,
-    onDonation: () => null,
-    onShopOrder: () => null,
-    onSubscription: () => null,
-};
-
-export const kofi = (app: Express, config?: Partial<Config>) => {
-    const conf = { ...defaultConfig, ...config };
+export const kofi = (app: Express, config?: Partial<Config<Request>>) => {
+    const conf = mergeConfig(config);
 
     app.post(conf.endpoint, async (req, res, next) => {
         const { data } = req.body as { data: string; };
@@ -44,14 +35,3 @@ export const kofi = (app: Express, config?: Partial<Config>) => {
         res.sendStatus(200);
     });
 };
-
-export interface Config {
-    endpoint: string;
-    onData: Callback<RequestData>;
-    onCommission: Callback<CommissionData>;
-    onDonation: Callback<DonationData>;
-    onShopOrder: Callback<ShopOrderData>;
-    onSubscription: Callback<SubscriptionData>;
-}
-
-export type Callback<TData> = (data: TData, req: ExpressRequest) => void | null | undefined | Promise<void>;
