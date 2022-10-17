@@ -47,6 +47,10 @@ View example implementation [here](https://github.com/oneso/ko-fi-express-exampl
         onSubscription: (data, req) => {
             console.log('onSubscription called');
         },
+        onError: (err, req) => {
+            console.error('onError called');
+        },
+        verificationToken: 'token',
     });
 
     app.listen(3000);
